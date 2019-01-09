@@ -5,11 +5,25 @@
         ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
 
-(unless (package-installed-p 'dart-mode)
+(let ((pkgs-to-install
+       (seq-remove 'package-installed-p '(dart-mode eglot))))
+  (when pkgs-to-install
     (package-refresh-contents)
-    (package-install 'dart-mode))
+    (dolist (pkg pkgs-to-install)
+      (package-install pkg))))
 
-(setq dart-enable-analysis-server t)
+(defun project-try-dart (dir)
+  (let ((project (or (locate-dominating-file dir "pubspec.yaml")
+                     (locate-dominating-file dir "BUILD"))))
+    (if project
+        (cons 'dart project)
+      (cons 'transient dir))))
+(add-hook 'project-find-functions #'project-try-dart)
+(cl-defmethod project-roots ((project (head dart)))
+  (list (cdr project)))
 
-(setq dart-debug t)
-(toggle-debug-on-error)
+(with-eval-after-load "eglot"
+  (add-to-list 'eglot-server-programs
+               '(dart-mode . ("dart_language_server"))))
+
+(add-hook 'dart-mode-hook 'eglot-ensure)
