@@ -8,8 +8,3 @@
 (unless (package-installed-p 'dart-mode)
     (package-refresh-contents)
     (package-install 'dart-mode))
-
-(setq dart-enable-analysis-server t)
-
-(setq dart-debug t)
-(toggle-debug-on-error)
