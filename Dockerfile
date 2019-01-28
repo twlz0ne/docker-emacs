@@ -11,4 +11,5 @@ RUN add-apt-repository ppa:kelleyk/emacs \
         && rm -rf /var/lib/apt/lists/*
 ADD .emacs.d /root/.emacs.d
 RUN emacs -batch -l ~/.emacs.d/init.el
-RUN curl https://raw.githubusercontent.com/flutter/flutter/master/examples/platform_channel/lib/main.dart > main.dart
+ADD main.dart main.dart
+CMD emacs main.dart
