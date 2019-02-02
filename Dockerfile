@@ -10,6 +10,4 @@ RUN add-apt-repository ppa:kelleyk/emacs \
         emacs26-nox \
         && rm -rf /var/lib/apt/lists/*
 ADD .emacs.d /root/.emacs.d
-RUN emacs -batch -l ~/.emacs.d/init.el
-ADD main.dart main.dart
-CMD emacs main.dart
+CMD emacs -f package-list-packages
